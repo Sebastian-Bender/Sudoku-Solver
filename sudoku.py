@@ -139,10 +139,10 @@ class Grid:
             if valid(self.model, i, (row, col)):
                 self.model[row][col] = i
                 self.cubes[row][col].set(i)
-                self.cubes[row][col].draw_change(self.win, True)
+                self.cubes[row][col].draw_change(self.win, (0, 155, 0))
                 self.update_model()
                 pygame.display.update()
-                pygame.time.delay(100)
+                pygame.time.delay(25)
 
                 if self.solve_backtracking():
                     return True
@@ -150,9 +150,9 @@ class Grid:
                 self.model[row][col] = 0
                 self.cubes[row][col].set(0)
                 self.update_model()
-                self.cubes[row][col].draw_change(self.win, False)
+                self.cubes[row][col].draw_change(self.win, (255, 0, 0))
                 pygame.display.update()
-                pygame.time.delay(100)
+                pygame.time.delay(25)
 
 
         return False
@@ -188,7 +188,7 @@ class Cube:
         if self.selected:
             pygame.draw.rect(win, (255,0,0), (x,y, gap ,gap), 3)
 
-    def draw_change(self, win, g=True):
+    def draw_change(self, win, c = (0, 0, 0)):
         fnt = pygame.font.SysFont("comicsans", 40)
 
         gap = self.width / 9
@@ -197,12 +197,9 @@ class Cube:
 
         pygame.draw.rect(win, (255, 255, 255), (x, y, gap, gap), 0)
 
-        text = fnt.render(str(self.value), 1, (0, 0, 0))
+        text = fnt.render(str(self.value), 1, c)
         win.blit(text, (x + (gap / 2 - text.get_width() / 2), y + (gap / 2 - text.get_height() / 2)))
-        if g:
-            pygame.draw.rect(win, (0, 255, 0), (x, y, gap, gap), 3)
-        else:
-            pygame.draw.rect(win, (255, 0, 0), (x, y, gap, gap), 3)
+        pygame.draw.rect(win, c, (x, y, gap, gap), 3)
 
     def set(self, val):
         self.value = val
@@ -270,12 +267,8 @@ def main():
     run = True
     start = time.time()
     
-    finished = False
+    play_time = 0
     while run:
-
-        if finished == False:
-            play_time = round(time.time() - start)
-
         for event in pygame.event.get():
             if event.type == pygame.QUIT:
                 run = False
@@ -323,7 +316,6 @@ def main():
                 if event.key == pygame.K_SPACE:
                     board.solve_backtracking()
                     play_time = round(time.time() - start)
-                    finished = True
 
                 if event.key == pygame.K_RETURN:
                     i, j = board.selected
@@ -346,6 +338,7 @@ def main():
         if board.selected and key != None:
             board.sketch(key)
 
+        pygame.time.delay(50)
         redraw_window(win, board, play_time)
         pygame.display.update()
 
