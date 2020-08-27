@@ -1,6 +1,10 @@
 # Sudoku-Solver
 Simple Sudoku solver made in python using backtracking algorithm
 
+# Requirements
+  - Python3
+  - pygame
+
 # Instruction
 Press space to start solving with the backtracking algorithm.
 Or try to solve yourself.
